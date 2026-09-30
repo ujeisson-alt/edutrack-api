@@ -1,0 +1,63 @@
+erDiagram
+    USERS ||--o{ COURSES : "teaches (teacher_id)"
+    CATEGORIES |o--o{ COURSES : "classifies"
+    COURSES ||--o{ LESSONS : "contains"
+    USERS ||--o{ ENROLLMENTS : "enrolls (student_id)"
+    COURSES ||--o{ ENROLLMENTS : "has"
+    USERS ||--o{ PROGRESS : "tracks"
+    LESSONS ||--o{ PROGRESS : "completed in"
+
+    USERS {
+        serial id PK
+        varchar name
+        varchar email UK
+        varchar password
+        user_role role "STUDENT | TEACHER | ADMIN"
+        text bio
+        varchar avatar_url
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    CATEGORIES {
+        serial id PK
+        varchar name UK
+        text description
+        timestamptz created_at
+    }
+    COURSES {
+        serial id PK
+        varchar title
+        text description
+        int teacher_id FK
+        int category_id FK
+        numeric price
+        int max_students
+        boolean is_published
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    LESSONS {
+        serial id PK
+        int course_id FK
+        varchar title
+        text content
+        int order_index
+        int duration_minutes
+        timestamptz created_at
+    }
+    ENROLLMENTS {
+        serial id PK
+        int student_id FK
+        int course_id FK
+        timestamptz enrolled_at
+        enrollment_status status "ACTIVE | COMPLETED | CANCELLED"
+        payment_status payment_status "PENDING | PAID | REFUNDED"
+    }
+    PROGRESS {
+        serial id PK
+        int student_id FK
+        int lesson_id FK
+        timestamptz completed_at
+        boolean is_completed
+    }
